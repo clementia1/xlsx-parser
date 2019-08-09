@@ -1,4 +1,5 @@
 import React from 'react';
+import Basic from './Dropzone.js';
 
 class App extends React.Component {
     constructor() {
@@ -9,7 +10,7 @@ class App extends React.Component {
         return (
             <div>
                 <div className="container-fluid">
-		hello world
+					<Basic />
                 </div>
             </div>
         );
