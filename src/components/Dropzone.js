@@ -41,7 +41,7 @@ function Basic(props) {
   
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
-      {file.path} - {file.size} bytes
+      {file.path} - {file.size} байт
     </li>
   ));
 
