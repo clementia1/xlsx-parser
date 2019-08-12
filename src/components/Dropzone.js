@@ -1,12 +1,14 @@
 import React, {useMemo} from 'react';
 import {useDropzone} from 'react-dropzone';
+import request from 'superagent';
+import axios from 'axios';
 
 const baseStyle = {
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  padding: '20px',
+  padding: '50px',
   borderWidth: 2,
   borderRadius: 2,
   borderColor: '#eeeeee',
@@ -37,13 +39,25 @@ function Basic(props) {
     isDragActive,
     isDragAccept,
     isDragReject
-  } = useDropzone({accept: 'image/*'});
+  } = useDropzone({
+		accept: 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+		onDrop: files => onDrop(files)
+	  });
   
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
       {file.path} - {file.size} байт
     </li>
   ));
+
+function onDrop(acceptedFiles) {
+  const req = request.post('http://localhost:4000/upload')
+  acceptedFiles.forEach(file => {
+    req.attach('file', file)
+    console.log(file)
+  })
+  req.end()
+}
 
   const style = useMemo(() => ({
     ...baseStyle,
@@ -61,8 +75,8 @@ function Basic(props) {
         <input {...getInputProps()} />
         <p>Перетащите файл сюда или нажмите, чтобы выбрать файл</p>
       </div>
-      <aside>
-        <h4>Файлы</h4>
+      <aside className="file-list">
+        <h4>Выбрано</h4>
         <ul>{files}</ul>
       </aside>
     </section>
