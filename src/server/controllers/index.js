@@ -118,10 +118,11 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 	let json = XLSX.utils.sheet_to_json(sheet);
 	function removeDuplicates() {
 		for (let i = 0; i < json.length - 1; i++) {
+				console.log(i);
 				let duplicatesInSequence = 0;
 				let cell = sheet['D' + i];
 				let test = sheet['B' + i];
-				let nextCell = sheet['D' + (i + 1 + duplicatesInSequence)];
+				let nextCell = sheet['D' + (i + 1)];
 				if (cell != undefined & nextCell != undefined) {
 					while (sheet['D' + i].v == sheet['D' + (i + 1 + duplicatesInSequence)].v) {
 						duplicatesInSequence++;			
@@ -133,7 +134,8 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 			}
 	}
 	removeDuplicates();
-	XLSX.writeFile(workbook, 'result.xls')
+	XLSX.writeFile(workbook, '../../build/result.xls');
+	res.send('Ok')
 })
 
 module.exports = router;

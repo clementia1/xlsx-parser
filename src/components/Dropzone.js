@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useState, useMemo} from 'react';
 import {useDropzone} from 'react-dropzone';
 import request from 'superagent';
 import axios from 'axios';
@@ -43,20 +43,26 @@ function Basic(props) {
 		accept: 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 		onDrop: files => onDrop(files)
 	  });
+  const [xlsReady, setReadyXls] = useState(false);
+  
   
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
-      {file.path} - {file.size} байт
+      {file.path} - {file.size} байт { xlsReady ? <a href="result.xls" className="btn btn-success custom-margin" role="button">Скачать</a> :  <button type="button" className="btn btn-secondary custom-margin" disabled>Скачать</button> }
     </li>
   ));
 
 function onDrop(acceptedFiles) {
+   setReadyXls(false);
   const req = request.post('http://localhost:4000/upload')
   acceptedFiles.forEach(file => {
     req.attach('file', file)
     console.log(file)
   })
-  req.end()
+	req.end(function(err, res){
+		console.log(res);
+		setReadyXls(true);
+	});
 }
 
   const style = useMemo(() => ({
