@@ -31,9 +31,10 @@ var crefregex = /(^|[^._A-Z0-9])([$]?)([A-Z]{1,2}|[A-W][A-Z]{2}|X[A-E][A-Z]|XF[A
 */
 
 function delete_rows(ws, start_row, nrows) {
+	console.log(start_row, nrows);
 	if(!ws) throw new Error("operation expects a worksheet");
 	var dense = Array.isArray(ws);
-	if(!nrows) nrows = 1;
+	if(!nrows) nrows = 0;
 	if(!start_row) start_row = 0;
 
 	/* extract original range */
@@ -118,18 +119,16 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 	let json = XLSX.utils.sheet_to_json(sheet);
 	function removeDuplicates() {
 		for (let i = 0; i < json.length - 1; i++) {
-				console.log(i);
 				let duplicatesInSequence = 0;
 				let cell = sheet['D' + i];
 				let test = sheet['B' + i];
 				let nextCell = sheet['D' + (i + 1)];
 				if (cell != undefined & nextCell != undefined) {
-					while (sheet['D' + i].v == sheet['D' + (i + 1 + duplicatesInSequence)].v) {
-						duplicatesInSequence++;			
-						console.log(j);						
+					while (sheet['D' + i].v === sheet['D' + (i + 1 + duplicatesInSequence)].v) {
+						duplicatesInSequence++;	
 						console.log(test.v, cell.v, nextCell.v, i);
 					}
-					delete_rows(sheet, i + j, duplicatesInSequence);
+					delete_rows(sheet, i, duplicatesInSequence);
 				}
 			}
 	}

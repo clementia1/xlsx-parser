@@ -60,7 +60,7 @@ function onDrop(acceptedFiles) {
     console.log(file)
   })
 	req.end(function(err, res){
-		console.log(res);
+		console.log(res.text);
 		setReadyXls(true);
 	});
 }
