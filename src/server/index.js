@@ -8,11 +8,11 @@ let app = express();
 app.set('port', (process.env.PORT || 4000));
 app.use(bodyParser.urlencoded({
     extended: false,
-    limit: '20mb'
+    limit: '5mb'
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.raw({
-      limit: '50mb',
+      limit: '5mb',
       inflate: true,
       parameterLimit: 100000
 }))
