@@ -154,7 +154,6 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 	}	
 	XLSX.writeFile(workbook, '../../build/result.xls');
 	res.send('job done');
-	console.log(req.query);
 })
 
 module.exports = router;
