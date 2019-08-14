@@ -82,19 +82,19 @@ function onDrop(acceptedFiles) {
     <section className="container">
       <div {...getRootProps({style})}>
         <input {...getInputProps()} />
-        <p>Перетащите файл сюда или нажмите, чтобы выбрать файл</p>
+        <p>Перетягніть файл сюди або натисніть, щоб обрати файл</p>
       </div>
       <aside className="file-list">
-        <h4>Выбрано</h4>
+        <h4>Обрано</h4>
         <div className="checkbox-block">
 			<div className="form-check custom-margin">
 				<input className="form-check-input" 
 					type="checkbox" 
 					checked={removeDuplicates} 
 					onChange={() => setRemoveDuplicates(!removeDuplicates)} 
-					id="defaultCheck1"
+					id="checkbox1"
 				/>
-			  <label className="form-check-label" htmlFor="defaultCheck1">
+			  <label className="form-check-label" htmlFor="checkbox1">
 				Видалити дублюючі вакансії — від одного роботодавця на одну і ту ж саму посаду
 			  </label>
 			</div>
@@ -103,9 +103,9 @@ function onDrop(acceptedFiles) {
 					type="checkbox" 
 					checked={formatAddress} 
 					onChange={() => setFormatAddress(!formatAddress)} 
-					id="defaultCheck1"
+					id="checkbox2"
 				/>
-			  <label className="form-check-label" htmlFor="defaultCheck1">
+			  <label className="form-check-label" htmlFor="checkbox2">
 				Покращити формат фактичної адреси ПОУ — привести її до виду: Місто, вулиця, № будинка. Видалити номер квартири/офісу, якщо присутній
 			  </label>
 			</div>
