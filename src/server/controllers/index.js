@@ -1,14 +1,14 @@
 if (typeof require !== 'undefined') XLSX = require('xlsx');
-
 const express = require('express');
 // const upload = require('./upload.js');
 const router = express.Router();
 let multer  = require('multer');
+let formatAddress = require('../utils/formatAddress.js');
 
 let storage = multer.diskStorage({
   destination: '../../build/',
   filename: function (req, file, cb) {
-    cb(null, file.originalname)
+    cb(null, 'rawdata')
   }
 })
 
@@ -117,6 +117,7 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 	let workbook = XLSX.readFile(req.file.path);
 	let sheet = workbook.Sheets[workbook.SheetNames[0]];
 	let json = XLSX.utils.sheet_to_json(sheet);
+		
 	function removeDuplicates() {
 		for (let i = 0; i < json.length - 1; i++) {
 				let duplicatesInSequence = 0;
@@ -132,9 +133,28 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 				}
 			}
 	}
-	removeDuplicates();
+	//~ removeDuplicates();
+	//~ XLSX.writeFile(workbook, '../../build/result.xls');
+	//~ res.send('Ok');
+	function updateAddress() {
+		let json = XLSX.utils.sheet_to_json(sheet);
+		for (let i = 0; i < json.length + 10; i++) {
+			let cell = sheet['H' + i];
+			if (cell != undefined) {
+				cell.v = formatAddress(cell.v);
+				console.log(cell.v);
+			}
+		}
+	}
+	if (req.query.removeDuplicates == 'true') {
+		removeDuplicates();
+	}
+	if (req.query.formatAddress == 'true') {
+		updateAddress();
+	}	
 	XLSX.writeFile(workbook, '../../build/result.xls');
-	res.send('Ok')
+	res.send('job done');
+	console.log(req.query);
 })
 
 module.exports = router;

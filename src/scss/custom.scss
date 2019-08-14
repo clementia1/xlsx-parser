@@ -17,3 +17,18 @@ p {
 .custom-margin {
 	margin: 20px
 }
+
+.image-block {
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	padding: 5% 0 0 0;
+}
+
+.eias-image {
+	max-width: 40vw;
+}
+
+.checkbox-block {
+	padding-top: 1.25rem;
+}
