@@ -46,6 +46,7 @@ function Basic(props) {
   const [xlsReady, setReadyXls] = useState(false);
   const [removeDuplicates, setRemoveDuplicates] = useState(true);
   const [formatAddress, setFormatAddress] = useState(true);
+  const [removeEmptyPhones, setRemoveEmptyPhones] = useState(true);
   
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
@@ -62,6 +63,7 @@ function onDrop(acceptedFiles) {
   })
    req.query('removeDuplicates=' + removeDuplicates);
    req.query('formatAddress=' + formatAddress);
+   req.query('removeEmptyPhones=' + removeEmptyPhones);
 	req.end(function(err, res){
 		console.log(res.text);
 		setReadyXls(true);
@@ -107,6 +109,17 @@ function onDrop(acceptedFiles) {
 				/>
 			  <label className="form-check-label" htmlFor="checkbox2">
 				Покращити формат фактичної адреси ПОУ — привести її до виду: Місто, вулиця, № будинка. Видалити номер квартири/офісу, якщо присутній
+			  </label>
+			</div>
+			<div className="form-check custom-margin">
+			  	<input className="form-check-input" 
+					type="checkbox" 
+					checked={removeEmptyPhones} 
+					onChange={() => setRemoveEmptyPhones(!removeEmptyPhones)} 
+					id="checkbox3"
+				/>
+			  <label className="form-check-label" htmlFor="checkbox3">
+				Видалити вакансії з відсутнім номером телефону відділу кадрів
 			  </label>
 			</div>
 		</div>
