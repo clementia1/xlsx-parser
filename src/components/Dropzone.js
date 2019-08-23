@@ -49,7 +49,7 @@ function Basic(props) {
   
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
-      {file.path} - {file.size} байт { xlsReady ? <a href="result.xls" className="btn btn-success custom-margin" role="button">Скачать</a> :  <button type="button" className="btn btn-secondary custom-margin" disabled>Скачать</button> }
+      {file.path} - {file.size} байт { xlsReady ? <a href="upload/result.xls" className="btn btn-success custom-margin" role="button">Скачать</a> :  <button type="button" className="btn btn-secondary custom-margin" disabled>Скачать</button> }
     </li>
   ));
 

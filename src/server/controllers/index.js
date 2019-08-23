@@ -83,7 +83,7 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 	sheet['E1'].v = "Завдання та обов'язки";
 	sheet['F1'].v = 'Телефон відділу кадрів';
 	sheet['G1'].v = 'Фактична адреса';
-	XLSX.writeFile(workbook, '../../build/result.xls');
+	XLSX.writeFile(workbook, '/upload');
 	res.send('job done');
 })
 
