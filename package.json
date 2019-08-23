@@ -6,7 +6,8 @@
   "scripts": {
     "webpack": "./node_modules/.bin/webpack --mode=development --progress --color --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "./node_modules/.bin/webpack --config webpack.prod.js"
+    "build": "./node_modules/.bin/webpack --config webpack.prod.js",
+    "start": "node src/server/index.js"
   },
   "author": "",
   "license": "ISC",
