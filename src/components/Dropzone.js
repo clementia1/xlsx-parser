@@ -1,7 +1,6 @@
 import React, {useState, useMemo} from 'react';
 import {useDropzone} from 'react-dropzone';
 import request from 'superagent';
-import axios from 'axios';
 
 const baseStyle = {
   flex: 1,
