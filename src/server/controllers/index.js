@@ -8,7 +8,7 @@ let deleteCols = require('../utils/deleteCols.js');
 let deleteRows = require('../utils/deleteRows.js');
 
 let storage = multer.diskStorage({
-  destination: '../../build/',
+  destination: './upload',
   filename: function (req, file, cb) {
     cb(null, 'rawdata')
   }
