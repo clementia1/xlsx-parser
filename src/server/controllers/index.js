@@ -14,12 +14,11 @@ let storage = multer.diskStorage({
     cb(null, 'rawdata')
   }
 })
-console.log(path.join(__dirname, '..', '..', '..', 'build'))
 let upload = multer({ storage: storage });
 
 // router.post('/upload', upload.uploadSpreadsheet);
 router.post('/upload', upload.single('file'), function (req, res, next) {
-	
+	res.write("Server received target file");
 	let workbook = XLSX.readFile(req.file.path);
 	let sheet = workbook.Sheets[workbook.SheetNames[0]];
 	let json = XLSX.utils.sheet_to_json(sheet);
@@ -85,7 +84,8 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 	sheet['F1'].v = 'Телефон відділу кадрів';
 	sheet['G1'].v = 'Фактична адреса';
 	XLSX.writeFile(workbook, path.join(__dirname, '..', '..', '..', 'build', 'result.xls'));
-	res.send('job done');
+	res.write('job done');
+	res.end()
 })
 
 module.exports = router;
