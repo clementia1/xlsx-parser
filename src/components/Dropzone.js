@@ -65,7 +65,7 @@ function onDrop(acceptedFiles) {
    req.query('removeEmptyPhones=' + removeEmptyPhones);
 	req.end(function(err, res){
 		console.log(res.text);
-		if (res.text == 'job done') setReadyXls(true);		
+		setReadyXls(true);
 	});
 }
 
