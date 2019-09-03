@@ -32,7 +32,7 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 				if (cell != undefined & nextCell != undefined) {
 					while (sheet['D' + i].v === sheet['D' + (i + 1 + duplicatesInSequence)].v) {
 						duplicatesInSequence++;	
-						console.log(test.v, cell.v, nextCell.v, i);
+						// console.log(test.v, cell.v, nextCell.v, i);
 					}
 					deleteRows(sheet, i, duplicatesInSequence);
 				}
@@ -45,7 +45,7 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 			let cell = sheet['H' + i];
 			if (cell != undefined) {
 				cell.v = formatAddress(cell.v);
-				console.log(cell.v);
+				// console.log(cell.v);
 			}
 		}
 	}
