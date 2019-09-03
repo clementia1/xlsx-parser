@@ -14,7 +14,7 @@ var crefregex = /(^|[^._A-Z0-9])([$]?)([A-Z]{1,2}|[A-W][A-Z]{2}|X[A-E][A-Z]|XF[A
 */
 
 function deleteRows(ws, start_row, nrows) {
-	console.log(start_row, nrows);
+	// console.log(start_row, nrows);
 	if(!ws) throw new Error("operation expects a worksheet");
 	var dense = Array.isArray(ws);
 	if(!nrows) nrows = 0;
