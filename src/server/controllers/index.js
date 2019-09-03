@@ -2,18 +2,19 @@ if (typeof require !== 'undefined') XLSX = require('xlsx');
 const express = require('express');
 // const upload = require('./upload.js');
 const router = express.Router();
+const path = require('path');
 let multer  = require('multer');
 let formatAddress = require('../utils/formatAddress.js');
 let deleteCols = require('../utils/deleteCols.js');
 let deleteRows = require('../utils/deleteRows.js');
 
 let storage = multer.diskStorage({
-  destination: './upload',
+  destination: path.join(__dirname, '..', '..', '..', 'build'),
   filename: function (req, file, cb) {
     cb(null, 'rawdata')
   }
 })
-
+console.log(path.join(__dirname, '..', '..', '..', 'build'))
 let upload = multer({ storage: storage });
 
 // router.post('/upload', upload.uploadSpreadsheet);
@@ -83,7 +84,7 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 	sheet['E1'].v = "Завдання та обов'язки";
 	sheet['F1'].v = 'Телефон відділу кадрів';
 	sheet['G1'].v = 'Фактична адреса';
-	XLSX.writeFile(workbook, '/upload');
+	XLSX.writeFile(workbook, path.join(__dirname, '..', '..', '..', 'build', 'result.xls'));
 	res.send('job done');
 })
 
