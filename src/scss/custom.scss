@@ -6,6 +6,10 @@
 	padding-top: 10%;
 }
 
+.small-padding {
+	padding-top: 5%;
+}
+
 .file-list {
 	padding: 20px;
 	margin: 20px;
@@ -36,4 +40,8 @@ p {
 
 .checkbox-block {
 	padding-top: 1.25rem;
+}
+
+.description {
+	color: hsl(0, 0%, 45%);
 }
