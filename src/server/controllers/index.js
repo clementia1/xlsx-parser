@@ -23,59 +23,101 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 	let json = XLSX.utils.sheet_to_json(sheet, { blankrows: false, defval: '' });
 	
 	function removeDuplicates() {
-		for (let i = 1; i < json.length - 1; i++) {
-				let duplicatesInSequence = 0;
-				let cell = sheet['D' + i];
-				let test = sheet['B' + i];
-				let nextCell = sheet['D' + (i + 1)];
-				if (cell != undefined && nextCell != undefined) {
-					while (sheet['D' + (i + 1 + duplicatesInSequence)] != undefined && sheet['D' + i].v === sheet['D' + (i + 1 + duplicatesInSequence)].v) {
-						duplicatesInSequence++;	
-						// console.log(test.v, cell.v, nextCell.v, i);
-					}
-					deleteRows(sheet, i, duplicatesInSequence);
-				}
-			}
-			
-		//~ json.forEach((item, i, arr) => {
+		let json = XLSX.utils.sheet_to_json(sheet, { blankrows: false, defval: '' });
+		//~ for (let i = 1; i < json.length - 1; i++) {
 				//~ let duplicatesInSequence = 0;
-				//~ let cell = arr[i];
-				//~ let nextCell = arr[i + 1];
+				//~ let cell = sheet['D' + i];
+				//~ let test = sheet['B' + i];
+				//~ let nextCell = sheet['D' + (i + 1)];
 				//~ if (cell != undefined && nextCell != undefined) {
-						//~ while (arr[i + 1 + duplicatesInSequence] != undefined && arr[i]['Посада (назва) / Характеристика вакансії'] === arr[i + 1 + duplicatesInSequence]['Посада (назва) / Характеристика вакансії']) {
-							//~ duplicatesInSequence++;	
-							//~ console.log(arr[i + 1 + duplicatesInSequence]);
-						//~ }
-					//~ arr.splice(i, duplicatesInSequence);
+					//~ while (sheet['D' + (i + 1 + duplicatesInSequence)] != undefined && sheet['D' + i].v === sheet['D' + (i + 1 + duplicatesInSequence)].v) {
+						//~ duplicatesInSequence++;	
+						//~ // console.log(test.v, cell.v, nextCell.v, i);
+					//~ }
+					//~ deleteRows(sheet, i, duplicatesInSequence);
 				//~ }
-		//~ })
-		//~ sheet = XLSX.utils.json_to_sheet(json);
+			//~ }
+			
+		json.forEach((item, i, arr) => {
+				let duplicatesInSequence = 0;
+				let cell = json[i];
+				let nextCell = json[i + 1];
+				if (cell != undefined && nextCell != undefined) {
+						while (json[i + 1 + duplicatesInSequence] != undefined && json[i]['Посада (назва) / Характеристика вакансії'] === json[i + 1 + duplicatesInSequence]['Посада (назва) / Характеристика вакансії']) {
+							duplicatesInSequence++;	
+							console.log(json[i + 1 + duplicatesInSequence]);
+						}
+					json.splice(i, duplicatesInSequence);
+				}
+		})
+		console.log('new json', json);
+		sheet = XLSX.utils.json_to_sheet(json, { header:
+			["Номер вакансії / Оперативні вакансії",
+			"Роботодавець (назва) / Оперативні вакансії",
+			"Посада (назва) / Характеристика вакансії",
+			"Заробітна плата / Оперативні вакансії",
+			"Завдання та обов'язки / Характеристика вакансії",
+			"Телефон відділу кадрів / Оперативні вакансії",
+			"Фактична адреса ПОУ / Оперативні вакансії"]
+		});
 	}
 	
 	function updateAddress() {
 		let json = XLSX.utils.sheet_to_json(sheet);
-		for (let i = 0; i < json.length + 10; i++) {
-			let cell = sheet['H' + i];
-			if (cell != undefined) {
-				cell.v = formatAddress(cell.v);
-				// console.log(cell.v);
+		json = json.map(item => {
+			if (item['Фактична адреса ПОУ / Оперативні вакансії'] != undefined && item['Фактична адреса ПОУ / Оперативні вакансії'] != '') {
+				item['Фактична адреса ПОУ / Оперативні вакансії'] = formatAddress(item['Фактична адреса ПОУ / Оперативні вакансії'])
+				return item
 			}
-		}
+			return item
+		});	
+		sheet = XLSX.utils.json_to_sheet(json, { header:
+			["Номер вакансії / Оперативні вакансії",
+			"Роботодавець (назва) / Оперативні вакансії",
+			"Посада (назва) / Характеристика вакансії",
+			"Заробітна плата / Оперативні вакансії",
+			"Завдання та обов'язки / Характеристика вакансії",
+			"Телефон відділу кадрів / Оперативні вакансії",
+			"Фактична адреса ПОУ / Оперативні вакансії"]
+			});
+		//~ for (let i = 0; i < json.length + 10; i++) {
+			//~ let cell = sheet['H' + i];
+			//~ if (cell != undefined) {
+				//~ cell.v = formatAddress(cell.v);
+				//~ // console.log(cell.v);
+			//~ }
+		//~ }
 	}
 	
 	function removeEmptyPhones() {
 		let json = XLSX.utils.sheet_to_json(sheet);
-		let indexArray = [];
-		let j = 0;
-		for (let i = 1; i < json.length + 2; i++) {			
-			if (typeof sheet['G' + i] === 'undefined') {				
-				indexArray.push(i);
-			}
-		}
-		indexArray.forEach(item => {
-				deleteRows(sheet, item - 1 + j, 1);
-				j--;
-		})		
+		json = json.filter(item => {
+			if (item['Телефон відділу кадрів / Оперативні вакансії'] == '' || item['Телефон відділу кадрів / Оперативні вакансії'] == undefined) {
+				return false
+			}			
+			return true
+		});
+		sheet = XLSX.utils.json_to_sheet(json, { header:
+			["Номер вакансії / Оперативні вакансії",
+			"Роботодавець (назва) / Оперативні вакансії",
+			"Посада (назва) / Характеристика вакансії",
+			"Заробітна плата / Оперативні вакансії",
+			"Завдання та обов'язки / Характеристика вакансії",
+			"Телефон відділу кадрів / Оперативні вакансії",
+			"Фактична адреса ПОУ / Оперативні вакансії"]
+		});
+		//~ let json = XLSX.utils.sheet_to_json(sheet);
+		//~ let indexArray = [];
+		//~ let j = 0;
+		//~ for (let i = 1; i < json.length + 2; i++) {			
+			//~ if (typeof sheet['G' + i] === 'undefined') {				
+				//~ indexArray.push(i);
+			//~ }
+		//~ }
+		//~ indexArray.forEach(item => {
+				//~ deleteRows(sheet, item - 1 + j, 1);
+				//~ j--;
+		//~ })		
 	}
 	
 	if (req.query.removeDuplicates == 'true') {
@@ -87,8 +129,6 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 	if (req.query.removeEmptyPhones == 'true') {
 		removeEmptyPhones();
 	}
-	deleteCols(sheet, 9, 1);
-	deleteCols(sheet, 0, 1);
 	sheet['A1'].v = 'Номер вакансії';
 	sheet['B1'].v = 'Роботодавець';
 	sheet['C1'].v = 'Посада';
@@ -96,7 +136,10 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 	sheet['E1'].v = "Завдання та обов'язки";
 	sheet['F1'].v = 'Телефон відділу кадрів';
 	sheet['G1'].v = 'Фактична адреса';
-	XLSX.writeFile(workbook, path.join(__dirname, '..', '..', '..', 'build', 'result.xls'));
+	deleteCols(sheet, 9, 2);
+	let wb = XLSX.utils.book_new();
+	XLSX.utils.book_append_sheet(wb, sheet);
+	XLSX.writeFile(wb, path.join(__dirname, '..', '..', '..', 'build', 'result.xls'));
 	res.send('job done');
 })
 
