@@ -49,8 +49,7 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 						}
 					json.splice(i, duplicatesInSequence);
 				}
-		})
-		console.log('new json', json);
+		});
 		sheet = XLSX.utils.json_to_sheet(json, { header:
 			["Номер вакансії / Оперативні вакансії",
 			"Роботодавець (назва) / Оперативні вакансії",
