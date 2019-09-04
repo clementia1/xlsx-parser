@@ -20,22 +20,36 @@ let upload = multer({ storage: storage });
 router.post('/upload', upload.single('file'), function (req, res, next) {
 	let workbook = XLSX.readFile(req.file.path);
 	let sheet = workbook.Sheets[workbook.SheetNames[0]];
-	let json = XLSX.utils.sheet_to_json(sheet);
-		
+	let json = XLSX.utils.sheet_to_json(sheet, { blankrows: false, defval: '' });
+	
 	function removeDuplicates() {
-		for (let i = 0; i < json.length - 1; i++) {
+		for (let i = 1; i < json.length - 1; i++) {
 				let duplicatesInSequence = 0;
 				let cell = sheet['D' + i];
 				let test = sheet['B' + i];
 				let nextCell = sheet['D' + (i + 1)];
-				if (cell != undefined & nextCell != undefined) {
-					while (sheet['D' + i].v === sheet['D' + (i + 1 + duplicatesInSequence)].v) {
+				if (cell != undefined && nextCell != undefined) {
+					while (sheet['D' + (i + 1 + duplicatesInSequence)] != undefined && sheet['D' + i].v === sheet['D' + (i + 1 + duplicatesInSequence)].v) {
 						duplicatesInSequence++;	
 						// console.log(test.v, cell.v, nextCell.v, i);
 					}
 					deleteRows(sheet, i, duplicatesInSequence);
 				}
 			}
+			
+		//~ json.forEach((item, i, arr) => {
+				//~ let duplicatesInSequence = 0;
+				//~ let cell = arr[i];
+				//~ let nextCell = arr[i + 1];
+				//~ if (cell != undefined && nextCell != undefined) {
+						//~ while (arr[i + 1 + duplicatesInSequence] != undefined && arr[i]['Посада (назва) / Характеристика вакансії'] === arr[i + 1 + duplicatesInSequence]['Посада (назва) / Характеристика вакансії']) {
+							//~ duplicatesInSequence++;	
+							//~ console.log(arr[i + 1 + duplicatesInSequence]);
+						//~ }
+					//~ arr.splice(i, duplicatesInSequence);
+				//~ }
+		//~ })
+		//~ sheet = XLSX.utils.json_to_sheet(json);
 	}
 	
 	function updateAddress() {
