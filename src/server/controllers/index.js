@@ -124,13 +124,55 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 		}
 	}
 	
-	sheet['A1'].v = 'Номер вакансії';
-	sheet['B1'].v = 'Роботодавець';
-	sheet['C1'].v = 'Посада';
-	sheet['D1'].v = 'Заробітна плата';
-	sheet['E1'].v = "Завдання та обов'язки";
-	sheet['F1'].v = 'Телефон відділу кадрів';
-	sheet['G1'].v = 'Фактична адреса';
+	json = XLSX.utils.sheet_to_json(sheet, { blankrows: false, defval: '' });	
+	json = json.map(item => {
+		if (item.hasOwnProperty("Номер вакансії / Оперативні вакансії")) {
+			Object.defineProperty(item, "Номер вакансії",
+				Object.getOwnPropertyDescriptor(item, "Номер вакансії / Оперативні вакансії"));
+			delete item["Номер вакансії / Оперативні вакансії"];
+		}
+		if (item.hasOwnProperty("Роботодавець (назва) / Оперативні вакансії")) {
+			Object.defineProperty(item, "Роботодавець",
+				Object.getOwnPropertyDescriptor(item, "Роботодавець (назва) / Оперативні вакансії"));
+			delete item["Роботодавець (назва) / Оперативні вакансії"];
+		}
+		if (item.hasOwnProperty("Посада (назва) / Характеристика вакансії")) {
+			Object.defineProperty(item, "Посада",
+				Object.getOwnPropertyDescriptor(item, "Посада (назва) / Характеристика вакансії"));
+			delete item["Посада (назва) / Характеристика вакансії"];
+		}
+		if (item.hasOwnProperty("Заробітна плата / Оперативні вакансії")) {
+			Object.defineProperty(item, "Заробітна плата",
+				Object.getOwnPropertyDescriptor(item, "Заробітна плата / Оперативні вакансії"));
+			delete item["Заробітна плата / Оперативні вакансії"];
+		}
+		if (item.hasOwnProperty("Завдання та обов'язки / Характеристика вакансії")) {
+			Object.defineProperty(item, "Завдання та обов'язки",
+				Object.getOwnPropertyDescriptor(item, "Завдання та обов'язки / Характеристика вакансії"));
+			delete item["Завдання та обов'язки / Характеристика вакансії"];
+		}
+		if (item.hasOwnProperty("Телефон відділу кадрів / Оперативні вакансії")) {
+			Object.defineProperty(item, "Телефон відділу кадрів",
+				Object.getOwnPropertyDescriptor(item, "Телефон відділу кадрів / Оперативні вакансії"));
+			delete item["Телефон відділу кадрів / Оперативні вакансії"];
+		}
+		if (item.hasOwnProperty("Фактична адреса ПОУ / Оперативні вакансії")) {
+			Object.defineProperty(item, "Фактична адреса",
+				Object.getOwnPropertyDescriptor(item, "Фактична адреса ПОУ / Оперативні вакансії"));
+			delete item["Фактична адреса ПОУ / Оперативні вакансії"];
+		}
+		return item
+	});
+	sheet = XLSX.utils.json_to_sheet(json, { header:
+		["Номер вакансії",
+		"Роботодавець",
+		"Посада",
+		"Заробітна плата",
+		"Завдання та обов'язки",
+		"Телефон відділу кадрів",
+		"Фактична адреса"]
+	});
+	
 	let wb = XLSX.utils.book_new();
 	XLSX.utils.book_append_sheet(wb, sheet);
 	XLSX.writeFile(wb, path.join(__dirname, '..', '..', '..', 'build', 'result.xls'));

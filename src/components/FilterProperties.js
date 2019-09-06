@@ -6,7 +6,7 @@ function FilterProperties() {
   return (
 	<section className="container small-padding">
 		<div className="description">
-			<h5>Необхідно дотримуватись параметрів фільтру</h5>
+			<h5>Необхідно дотримуватись параметрів фільтру та сортування</h5>
 		</div>
 		<div className="image-block">		
 			<img className="eias-image" src={filter} alt="Filter" />
