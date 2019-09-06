@@ -21,7 +21,6 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 	let workbook = XLSX.readFile(req.file.path);
 	let sheet = workbook.Sheets[workbook.SheetNames[0]];
 	let json = XLSX.utils.sheet_to_json(sheet, { blankrows: false, defval: '' });
-	
 	json = json.map(item => {
 		if (item.hasOwnProperty('ОВ')) {
 			delete item['ОВ']
@@ -46,19 +45,6 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 	
 	function removeDuplicates() {
 		let json = XLSX.utils.sheet_to_json(sheet, { blankrows: false, defval: '' });
-		//~ for (let i = 1; i < json.length - 1; i++) {
-				//~ let duplicatesInSequence = 0;
-				//~ let cell = sheet['D' + i];
-				//~ let test = sheet['B' + i];
-				//~ let nextCell = sheet['D' + (i + 1)];
-				//~ if (cell != undefined && nextCell != undefined) {
-					//~ while (sheet['D' + (i + 1 + duplicatesInSequence)] != undefined && sheet['D' + i].v === sheet['D' + (i + 1 + duplicatesInSequence)].v) {
-						//~ duplicatesInSequence++;	
-						//~ // console.log(test.v, cell.v, nextCell.v, i);
-					//~ }
-					//~ deleteRows(sheet, i, duplicatesInSequence);
-				//~ }
-			//~ }
 			
 		json.forEach((item, i, arr) => {
 				let duplicatesInSequence = 0;
@@ -67,30 +53,12 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 				if (cell != undefined && nextCell != undefined) {
 						while (json[i + 1 + duplicatesInSequence] != undefined && json[i]['Посада (назва) / Характеристика вакансії'] === json[i + 1 + duplicatesInSequence]['Посада (назва) / Характеристика вакансії'] && json[i]['Роботодавець (назва) / Оперативні вакансії'] === json[i + 1 + duplicatesInSequence]['Роботодавець (назва) / Оперативні вакансії']) {
 							duplicatesInSequence++;	
-							console.log(json[i + 1 + duplicatesInSequence]);
+							// console.log(json[i + 1 + duplicatesInSequence]);
 						}
 					json.splice(i, duplicatesInSequence);
 				}
 		}); 
-		//~ let duplicatesIndexes = [];
-				//~ let cell = json[i];
-				//~ let nextCell = json[i + 1];
-				//~ if (cell != undefined && nextCell != undefined) {
-						//~ for (let j = 0; j < json.length; j++) {							
-							//~ if (json[i]['Посада (назва) / Характеристика вакансії'] === json[j]['Посада (назва) / Характеристика вакансії'] && json[i]['Роботодавець (назва) / Оперативні вакансії'] === json[j]['Роботодавець (назва) / Оперативні вакансії']) {
-								//~ duplicatesIndexes.push(j);	
-								//~ console.log(json[j]['Роботодавець (назва) / Оперативні вакансії']);
-								//~ json.splice(j, 1)
-							//~ }
-						//~ }
-					//~ if (duplicatesIndexes.length > 1) {
-						//~ duplicatesIndexes.forEach(item => {
-							//~ console.log(item);
-							//~ json.splice(item, 1)
-						//~ })
-					//~ }
-				//~ }
-		//~ }); 
+		
 		sheet = XLSX.utils.json_to_sheet(json, { header:
 			["Номер вакансії / Оперативні вакансії",
 			"Роботодавець (назва) / Оперативні вакансії",
@@ -120,19 +88,12 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 			"Телефон відділу кадрів / Оперативні вакансії",
 			"Фактична адреса ПОУ / Оперативні вакансії"]
 			});
-		//~ for (let i = 0; i < json.length + 10; i++) {
-			//~ let cell = sheet['H' + i];
-			//~ if (cell != undefined) {
-				//~ cell.v = formatAddress(cell.v);
-				//~ // console.log(cell.v);
-			//~ }
-		//~ }
 	}
 	
-	function removeEmptyPhones() {
+	function removeEmpty(target) {
 		let json = XLSX.utils.sheet_to_json(sheet);
 		json = json.filter(item => {
-			if (item['Телефон відділу кадрів / Оперативні вакансії'] == '' || item['Телефон відділу кадрів / Оперативні вакансії'] == undefined) {
+			if (item[target] == '' || item[target] == undefined) {
 				return false
 			}			
 			return true
@@ -146,18 +107,6 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 			"Телефон відділу кадрів / Оперативні вакансії",
 			"Фактична адреса ПОУ / Оперативні вакансії"]
 		});
-		//~ let json = XLSX.utils.sheet_to_json(sheet);
-		//~ let indexArray = [];
-		//~ let j = 0;
-		//~ for (let i = 1; i < json.length + 2; i++) {			
-			//~ if (typeof sheet['G' + i] === 'undefined') {				
-				//~ indexArray.push(i);
-			//~ }
-		//~ }
-		//~ indexArray.forEach(item => {
-				//~ deleteRows(sheet, item - 1 + j, 1);
-				//~ j--;
-		//~ })		
 	}
 	
 	if (req.query.removeDuplicates == 'true') {
@@ -166,9 +115,15 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 	if (req.query.formatAddress == 'true') {
 		updateAddress();
 	}
-	if (req.query.removeEmptyPhones == 'true') {
-		removeEmptyPhones();
+	if (req.query.removeEmpty == 'true') {
+		let options = JSON.parse(req.body.removeOptions);
+		if (options != null && options != undefined) {
+			options.forEach(item => {
+					removeEmpty(item.value);
+			})		
+		}
 	}
+	
 	sheet['A1'].v = 'Номер вакансії';
 	sheet['B1'].v = 'Роботодавець';
 	sheet['C1'].v = 'Посада';

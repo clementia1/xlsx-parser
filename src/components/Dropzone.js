@@ -1,6 +1,7 @@
 import React, {useState, useMemo} from 'react';
 import {useDropzone} from 'react-dropzone';
 import request from 'superagent';
+import Select from 'react-select';
 
 const baseStyle = {
   flex: 1,
@@ -45,7 +46,10 @@ function Basic(props) {
   const [xlsReady, setReadyXls] = useState(false);
   const [removeDuplicates, setRemoveDuplicates] = useState(true);
   const [formatAddress, setFormatAddress] = useState(true);
-  const [removeEmptyPhones, setRemoveEmptyPhones] = useState(true);
+  const [removeEmpty, setRemoveEmpty] = useState(true);
+  const [selectedValues, onSelectChange] = useState([
+	  { value: 'Телефон відділу кадрів / Оперативні вакансії', label: 'Телефону' }
+	]);
   
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
@@ -54,15 +58,16 @@ function Basic(props) {
   ));
 
 function onDrop(acceptedFiles) {
-   setReadyXls(false);
-  const req = request.post('/upload')
-  acceptedFiles.forEach(file => {
-    req.attach('file', file)
-    console.log(file)
-  })
-   req.query('removeDuplicates=' + removeDuplicates);
-   req.query('formatAddress=' + formatAddress);
-   req.query('removeEmptyPhones=' + removeEmptyPhones);
+	setReadyXls(false);
+	const req = request.post('/upload')
+	acceptedFiles.forEach(file => {
+		req.attach('file', file)
+		console.log(file)
+	})
+	req.query('removeDuplicates=' + removeDuplicates);
+	req.query('formatAddress=' + formatAddress);
+	req.query('removeEmpty=' + removeEmpty);
+	req.field("removeOptions", JSON.stringify(selectedValues)); 
 	req.end(function(err, res){
 		console.log(res.text);
 		setReadyXls(true);
@@ -78,6 +83,12 @@ function onDrop(acceptedFiles) {
     isDragActive,
     isDragReject
   ]);
+
+	const options = [
+	  { value: "Телефон відділу кадрів / Оперативні вакансії", label: "Телефону" },
+	  { value: "Завдання та обов'язки / Характеристика вакансії", label: "Обов'язків" },
+	  { value: "Фактична адреса ПОУ / Оперативні вакансії", label: "Фактичної адреси" },
+	];
 
   return (
     <section className="container">
@@ -113,13 +124,23 @@ function onDrop(acceptedFiles) {
 			<div className="form-check custom-margin">
 			  	<input className="form-check-input" 
 					type="checkbox" 
-					checked={removeEmptyPhones} 
-					onChange={() => setRemoveEmptyPhones(!removeEmptyPhones)} 
+					checked={removeEmpty} 
+					onChange={() => setRemoveEmpty(!removeEmpty)} 
 					id="checkbox3"
 				/>
 			  <label className="form-check-label" htmlFor="checkbox3">
-				Видалити вакансії з відсутнім номером телефону відділу кадрів
+				Видалити вакансії, якщо порожнє значення
 			  </label>
+			    <Select
+					defaultValue={[options[0]]}
+					isMulti
+					name="colors"
+					closeMenuOnSelect={false}
+					options={options}
+					className="basic-multi-select"
+					classNamePrefix="select"
+					onChange={(option) => onSelectChange(option)} 
+				  />
 			</div>
 		</div>
         <ul>{files}</ul>

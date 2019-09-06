@@ -40,6 +40,7 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-dropzone": "^10.1.7",
+    "react-select": "^3.0.4",
     "superagent": "^5.1.0",
     "xlsx": "^0.15.0"
   }
