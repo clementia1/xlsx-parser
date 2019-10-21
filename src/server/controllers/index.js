@@ -5,6 +5,7 @@ const router = express.Router();
 const path = require('path');
 let multer  = require('multer');
 let formatAddress = require('../utils/formatAddress.js');
+let removeByDuties = require('../utils/removeByDuties.js');
 let deleteCols = require('../utils/deleteCols.js');
 let deleteRows = require('../utils/deleteRows.js');
 
@@ -121,6 +122,25 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 			options.forEach(item => {
 					removeEmpty(item.value);
 			})		
+		}
+	}
+	
+	if (req.query.removeByDuties == 'true') {
+		let options = JSON.parse(req.body.removeByDutiesOptions);
+		options = options.map(item => { return item.value});
+		console.log(options);
+		if (options != null && options != undefined) {
+			let json = XLSX.utils.sheet_to_json(sheet);
+			json = removeByDuties(json, options);
+			sheet = XLSX.utils.json_to_sheet(json, { header:
+				["Номер вакансії / Оперативні вакансії",
+				"Роботодавець (назва) / Оперативні вакансії",
+				"Посада (назва) / Характеристика вакансії",
+				"Заробітна плата / Оперативні вакансії",
+				"Завдання та обов'язки / Характеристика вакансії",
+				"Телефон відділу кадрів / Оперативні вакансії",
+				"Фактична адреса ПОУ / Оперативні вакансії"]
+			});			
 		}
 	}
 	

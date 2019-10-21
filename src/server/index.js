@@ -1,4 +1,5 @@
 const express = require('express');
+const compression = require('compression');
 const bodyParser = require('body-parser');
 const path = require('path');
 const controllers = require('./controllers/index.js');
@@ -16,6 +17,7 @@ app.use(bodyParser.raw({
       inflate: true,
       parameterLimit: 100000
 }))
+app.use(compression());
 app.use(express.static(path.join(__dirname, '..', '..', 'build')));
 app.listen(app.get('port'), function () {
     console.log('App is running on port', app.get('port'));

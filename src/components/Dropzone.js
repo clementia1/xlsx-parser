@@ -47,10 +47,16 @@ function Basic(props) {
   const [removeDuplicates, setRemoveDuplicates] = useState(true);
   const [formatAddress, setFormatAddress] = useState(true);
   const [removeEmpty, setRemoveEmpty] = useState(true);
-  const [selectedValues, onSelectChange] = useState([
+  const [removeByDuties, setRemoveByDuties] = useState(true);
+  const [selectedRemoveEmpty, onSelectEmptyChange] = useState([
 	  { value: 'Телефон відділу кадрів / Оперативні вакансії', label: 'Телефону' }
 	]);
-  
+  const [selectedDuties, onSelectByDuties] = useState([
+	  { value: "*", label: "Символ * на початку строки" },
+	  { value: "рекрутер", label: "Слово «рекрутер» або «рекрутинг»" },
+	  { value: "при собі мати резюме", label: "Фразу «при собі мати резюме»" }
+   ]);
+	
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
       {file.path} - {file.size} байт { xlsReady ? <a href="/result.xls" className="btn btn-success custom-margin" role="button">Скачать</a> :  <button type="button" className="btn btn-secondary custom-margin" disabled>Скачать</button> }
@@ -67,7 +73,9 @@ function onDrop(acceptedFiles) {
 	req.query('removeDuplicates=' + removeDuplicates);
 	req.query('formatAddress=' + formatAddress);
 	req.query('removeEmpty=' + removeEmpty);
-	req.field("removeOptions", JSON.stringify(selectedValues)); 
+	req.query('removeByDuties=' + removeByDuties);
+	req.field("removeOptions", JSON.stringify(selectedRemoveEmpty)); 
+	req.field("removeByDutiesOptions", JSON.stringify(selectedDuties)); 
 	req.end(function(err, res){
 		console.log(res.text);
 		setReadyXls(true);
@@ -87,7 +95,12 @@ function onDrop(acceptedFiles) {
 	const options = [
 	  { value: "Телефон відділу кадрів / Оперативні вакансії", label: "Телефону" },
 	  { value: "Завдання та обов'язки / Характеристика вакансії", label: "Обов'язків" },
-	  { value: "Фактична адреса ПОУ / Оперативні вакансії", label: "Фактичної адреси" },
+	  { value: "Фактична адреса ПОУ / Оперативні вакансії", label: "Фактичної адреси" }
+	];
+	const options2 = [
+	  { value: "*", label: "Символ * на початку строки" },
+	  { value: "рекрутер", label: "Слово «рекрутер» або «рекрутинг»" },
+	  { value: "при собі мати резюме", label: "Фразу «при собі мати резюме»" }
 	];
 
   return (
@@ -99,6 +112,7 @@ function onDrop(acceptedFiles) {
       <aside className="file-list">
         <h4>Обрано</h4>
         <div className="checkbox-block">
+        
 			<div className="form-check custom-margin">
 				<input className="form-check-input" 
 					type="checkbox" 
@@ -110,6 +124,7 @@ function onDrop(acceptedFiles) {
 				Видалити дублюючі вакансії — від одного роботодавця на одну і ту ж саму посаду
 			  </label>
 			</div>
+			
 			<div className="form-check custom-margin">
 			  	<input className="form-check-input" 
 					type="checkbox" 
@@ -121,6 +136,29 @@ function onDrop(acceptedFiles) {
 				Покращити формат фактичної адреси ПОУ — привести її до виду: Місто, вулиця, № будинка. Видалити номер квартири/офісу, якщо присутній
 			  </label>
 			</div>
+
+			<div className="form-check custom-margin">
+			  	<input className="form-check-input" 
+					type="checkbox" 
+					checked={removeByDuties} 
+					onChange={() => setRemoveByDuties(!removeByDuties)} 
+					id="checkbox3"
+				/>
+			  <label className="form-check-label" htmlFor="checkbox3">
+				Видалити вакансії, якщо «Завдання та обов'язки» містять
+			  </label>
+			    <Select
+					defaultValue={options2}
+					isMulti
+					name="colors"
+					closeMenuOnSelect={false}
+					options={options2}
+					className="basic-multi-select"
+					classNamePrefix="select"
+					onChange={(option) => onSelectByDuties(option)} 
+				  />
+			</div>
+			
 			<div className="form-check custom-margin">
 			  	<input className="form-check-input" 
 					type="checkbox" 
@@ -139,7 +177,7 @@ function onDrop(acceptedFiles) {
 					options={options}
 					className="basic-multi-select"
 					classNamePrefix="select"
-					onChange={(option) => onSelectChange(option)} 
+					onChange={(option) => onSelectEmptyChange(option)} 
 				  />
 			</div>
 		</div>
