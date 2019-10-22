@@ -46,6 +46,7 @@ function Basic(props) {
   const [xlsReady, setReadyXls] = useState(false);
   const [removeDuplicates, setRemoveDuplicates] = useState(true);
   const [formatAddress, setFormatAddress] = useState(true);
+  const [removeNonKharkiv, setRemoveNonKharkiv] = useState(true);
   const [removeEmpty, setRemoveEmpty] = useState(true);
   const [removeByDuties, setRemoveByDuties] = useState(true);
   const [selectedRemoveEmpty, onSelectEmptyChange] = useState([
@@ -73,6 +74,7 @@ function onDrop(acceptedFiles) {
 	req.query('removeDuplicates=' + removeDuplicates);
 	req.query('formatAddress=' + formatAddress);
 	req.query('removeEmpty=' + removeEmpty);
+	req.query('removeNonKharkiv=' + removeNonKharkiv);
 	req.query('removeByDuties=' + removeByDuties);
 	req.field("removeOptions", JSON.stringify(selectedRemoveEmpty)); 
 	req.field("removeByDutiesOptions", JSON.stringify(selectedDuties)); 
@@ -133,7 +135,7 @@ function onDrop(acceptedFiles) {
 					id="checkbox2"
 				/>
 			  <label className="form-check-label" htmlFor="checkbox2">
-				Покращити формат фактичної адреси ПОУ — привести її до виду: Місто, вулиця, № будинка. Видалити номер квартири/офісу, якщо присутній
+				Покращити формат фактичної адреси ПОУ — привести її до виду: Область, Місто, Район міста, вулиця, № будинка. Видалити номер квартири/офісу, якщо присутній
 			  </label>
 			</div>
 
@@ -179,6 +181,18 @@ function onDrop(acceptedFiles) {
 					classNamePrefix="select"
 					onChange={(option) => onSelectEmptyChange(option)} 
 				  />
+			</div>
+			
+			<div className="form-check custom-margin">
+			  	<input className="form-check-input" 
+					type="checkbox" 
+					checked={removeNonKharkiv} 
+					onChange={() => setRemoveNonKharkiv(!removeNonKharkiv)} 
+					id="checkbox2"
+				/>
+			  <label className="form-check-label" htmlFor="checkbox2">
+				Видалити вакансії з фактичною адресою за межами міста Харкова
+			  </label>
 			</div>
 		</div>
         <ul>{files}</ul>

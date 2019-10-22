@@ -110,11 +110,31 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 		});
 	}
 	
+	function removeNonKharkiv() {
+		let json = XLSX.utils.sheet_to_json(sheet);
+		json = json.filter(item => {
+			let targetField = item["Фактична адреса ПОУ / Оперативні вакансії"];
+			return targetField != undefined && targetField.match(/Харківська область, Харків/i) != null
+		});
+		sheet = XLSX.utils.json_to_sheet(json, { header:
+			["Номер вакансії / Оперативні вакансії",
+			"Роботодавець (назва) / Оперативні вакансії",
+			"Посада (назва) / Характеристика вакансії",
+			"Заробітна плата / Оперативні вакансії",
+			"Завдання та обов'язки / Характеристика вакансії",
+			"Телефон відділу кадрів / Оперативні вакансії",
+			"Фактична адреса ПОУ / Оперативні вакансії"]
+		});
+	}
+	
 	if (req.query.removeDuplicates == 'true') {
 		removeDuplicates();
 	}
 	if (req.query.formatAddress == 'true') {
 		updateAddress();
+	}
+	if (req.query.removeNonKharkiv == 'true') {
+		removeNonKharkiv();
 	}
 	if (req.query.removeEmpty == 'true') {
 		let options = JSON.parse(req.body.removeOptions);
@@ -128,7 +148,6 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 	if (req.query.removeByDuties == 'true') {
 		let options = JSON.parse(req.body.removeByDutiesOptions);
 		options = options.map(item => { return item.value});
-		console.log(options);
 		if (options != null && options != undefined) {
 			let json = XLSX.utils.sheet_to_json(sheet);
 			json = removeByDuties(json, options);

@@ -14,7 +14,6 @@ function removeByDuties(targetArray, options) {
 		resultArray = resultArray.filter(item => {
 			let targetField = item["Завдання та обов'язки / Характеристика вакансії"];
 			if (targetField != undefined && targetField.match(/рекрутер|рекрутинг(\s|\.)/i) != null) {
-				console.log('рекрутинг')
 				return false
 			}			
 			return true
