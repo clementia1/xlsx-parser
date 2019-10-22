@@ -114,7 +114,7 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
 		let json = XLSX.utils.sheet_to_json(sheet);
 		json = json.filter(item => {
 			let targetField = item["Фактична адреса ПОУ / Оперативні вакансії"];
-			return targetField != undefined && targetField.match(/Харківська область, Харків/i) != null
+			return targetField != undefined && targetField.match(/Харківська область, Харків,/i) != null
 		});
 		sheet = XLSX.utils.json_to_sheet(json, { header:
 			["Номер вакансії / Оперативні вакансії",
