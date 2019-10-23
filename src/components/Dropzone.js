@@ -60,7 +60,7 @@ function Basic(props) {
 	
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
-      {file.path} - {file.size} байт { xlsReady ? <a href="/result.xls" className="btn btn-success custom-margin" role="button">Скачать</a> :  <button type="button" className="btn btn-secondary custom-margin" disabled>Скачать</button> }
+      { xlsReady ? <a href="/result.xls" className="btn btn-success btn-lg download-button custom-margin" role="button">Скачать</a> :  <div class="lds-dual-ring"></div> }
     </li>
   ));
 
@@ -111,6 +111,9 @@ function onDrop(acceptedFiles) {
         <input {...getInputProps()} />
         <p>Перетягніть файл сюди або натисніть, щоб обрати файл</p>
       </div>
+      <div>
+		<ul className="downloadFiles">{files}</ul>
+	  </div>
       <aside className="file-list">
         <h4>Обрано</h4>
         <div className="checkbox-block">
@@ -194,8 +197,7 @@ function onDrop(acceptedFiles) {
 				Видалити вакансії з фактичною адресою за межами міста Харкова
 			  </label>
 			</div>
-		</div>
-        <ul>{files}</ul>
+		</div>        
       </aside>
     </section>
   );

@@ -49,3 +49,42 @@ p {
 .basic-multi-select {
 	padding-top: 10px;
 }
+
+.lds-dual-ring {
+  display: inline-block;
+  width: 64px;
+  height: 64px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 69px;
+  height: 69px;
+  margin: 1px;
+  border-radius: 50%;
+  border: 5px solid #5294e2;
+  border-color: #5294e2 transparent #5294e2 transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.downloadFiles {
+  list-style-type: none;
+}
+
+.downloadFiles li {
+	display: flex;
+	justify-content: center;
+	padding: 3rem;
+}
+
+.download-button {
+	padding: 1rem 5rem !important;
+}
