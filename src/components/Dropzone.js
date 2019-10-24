@@ -60,7 +60,7 @@ function Basic(props) {
 	
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
-      { xlsReady ? <a href="/result.xls" className="btn btn-success btn-lg download-button custom-margin" role="button">Скачать</a> : <div class="lds-dual-ring"></div> }
+      { xlsReady ? <a href="/result.xls" className="btn btn-success btn-lg download-button" role="button">Скачать</a> : <div class="lds-dual-ring"></div> }
     </li>
   ));
 
