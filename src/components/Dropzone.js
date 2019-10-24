@@ -60,7 +60,7 @@ function Basic(props) {
 	
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
-      { xlsReady ? <a href="/result.xls" className="btn btn-success btn-lg download-button custom-margin" role="button">Скачать</a> :  <div class="lds-dual-ring"></div> }
+      { xlsReady ? <a href="/result.xls" className="btn btn-success btn-lg download-button custom-margin" role="button">Скачать</a> : <div class="lds-dual-ring"></div> }
     </li>
   ));
 
@@ -169,9 +169,9 @@ function onDrop(acceptedFiles) {
 					type="checkbox" 
 					checked={removeEmpty} 
 					onChange={() => setRemoveEmpty(!removeEmpty)} 
-					id="checkbox3"
+					id="checkbox4"
 				/>
-			  <label className="form-check-label" htmlFor="checkbox3">
+			  <label className="form-check-label" htmlFor="checkbox4">
 				Видалити вакансії, якщо порожнє значення
 			  </label>
 			    <Select
@@ -191,9 +191,9 @@ function onDrop(acceptedFiles) {
 					type="checkbox" 
 					checked={removeNonKharkiv} 
 					onChange={() => setRemoveNonKharkiv(!removeNonKharkiv)} 
-					id="checkbox2"
+					id="checkbox5"
 				/>
-			  <label className="form-check-label" htmlFor="checkbox2">
+			  <label className="form-check-label" htmlFor="checkbox5">
 				Видалити вакансії з фактичною адресою за межами міста Харкова
 			  </label>
 			</div>
